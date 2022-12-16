@@ -1,0 +1,40 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.7.10'
+    id 'org.hidetake.ssh' version '2.10.1'
+}
+
+allprojects {
+    group = 'me.baggi'
+    version = '1.0-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+
+        maven {
+            url = 'https://papermc.io/repo/repository/maven-public/'
+        }
+
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+        sourceCompatibility = "1.8"
+        targetCompatibility = "1.8"
+    }
+
+    compileKotlin {
+        kotlinOptions {
+            jvmTarget = '1.8'
+            freeCompilerArgs = ["-Xlambdas=indy"]
+        }
+    }
+
+    jar {
+        from {
+            configurations.runtimeClasspath.collect { it.directory ? it : zipTree(it) }
+        }
+        duplicatesStrategy DuplicatesStrategy.EXCLUDE
+    }
+
+}
